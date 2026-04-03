@@ -1,0 +1,44 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.9, pytest-9.0.2, pluggy-1.6.0 -- C:\Program Files\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: D:\Self-Healing Autonomous Data Pipeline Agent\backend
+plugins: anyio-4.13.0, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 28 items
+
+tests/test_pipeline.py::TestDataQualityEngine::test_null_detection_critical PASSED [  3%]
+tests/test_pipeline.py::TestDataQualityEngine::test_null_detection_warning PASSED [  7%]
+tests/test_pipeline.py::TestDataQualityEngine::test_duplicate_detection PASSED [ 10%]
+tests/test_pipeline.py::TestDataQualityEngine::test_pii_detection_email_column PASSED [ 14%]
+tests/test_pipeline.py::TestDataQualityEngine::test_pii_detection_pattern_match PASSED [ 17%]
+tests/test_pipeline.py::TestDataQualityEngine::test_outlier_detection PASSED [ 21%]
+tests/test_pipeline.py::TestDataQualityEngine::test_negative_value_detection PASSED [ 25%]
+tests/test_pipeline.py::TestDataQualityEngine::test_schema_drift_detection PASSED [ 28%]
+tests/test_pipeline.py::TestDataQualityEngine::test_quality_score_calculation PASSED [ 32%]
+tests/test_pipeline.py::TestDataQualityEngine::test_pii_masking PASSED   [ 35%]
+tests/test_pipeline.py::TestRetryEngine::test_retry_success_on_first_attempt PASSED [ 39%]
+tests/test_pipeline.py::TestRetryEngine::test_retry_success_after_failures PASSED [ 42%]
+tests/test_pipeline.py::TestRetryEngine::test_retry_exhaustion PASSED    [ 46%]
+tests/test_pipeline.py::TestRetryEngine::test_circuit_breaker_trips PASSED [ 50%]
+tests/test_pipeline.py::TestRetryEngine::test_circuit_breaker_recovery PASSED [ 53%]
+tests/test_pipeline.py::TestRetryEngine::test_idempotency_checkpointing PASSED [ 57%]
+tests/test_pipeline.py::TestRetryEngine::test_idempotency_hash PASSED    [ 60%]
+tests/test_pipeline.py::TestRetryEngine::test_watermark_manager PASSED   [ 64%]
+tests/test_pipeline.py::TestMonitoring::test_metrics_recording PASSED    [ 67%]
+tests/test_pipeline.py::TestMonitoring::test_timer PASSED                [ 71%]
+tests/test_pipeline.py::TestMonitoring::test_event_recording PASSED      [ 75%]
+tests/test_pipeline.py::TestMonitoring::test_lineage_tracker PASSED      [ 78%]
+tests/test_pipeline.py::TestMonitoring::test_lineage_mermaid_output PASSED [ 82%]
+tests/test_pipeline.py::TestProfiler::test_profile_csv PASSED            [ 85%]
+tests/test_pipeline.py::TestSimulator::test_etl_simulation_basic PASSED  [ 89%]
+tests/test_pipeline.py::TestSimulator::test_etl_simulation_error PASSED  [ 92%]
+tests/test_pipeline.py::TestSimulator::test_dag_validation_complete PASSED [ 96%]
+tests/test_pipeline.py::TestSimulator::test_sql_validation PASSED        [100%]
+
+============================== warnings summary ===============================
+tests/test_pipeline.py::TestProfiler::test_profile_csv
+  D:\Self-Healing Autonomous Data Pipeline Agent\backend\engine\profiler.py:30: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+    pd.to_datetime(col_data.dropna().head(20))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 28 passed, 1 warning in 1.18s ========================

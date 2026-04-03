@@ -1,0 +1,21 @@
+id,customer_name,email,phone,product,quantity,unit_price,total_amount,order_date,region,status
+1,Alice Johnson,alice@example.com,+1-555-123-4567,Widget A,5,29.99,149.95,2024-01-15,North,completed
+2,Bob Smith,bob@company.org,555-234-5678,Widget B,3,49.99,149.97,2024-01-16,South,completed
+3,Charlie Brown,,555-345-6789,Widget A,2,29.99,59.98,2024-01-17,East,pending
+4,Diana Prince,diana@email.com,,Widget C,1,99.99,99.99,2024-01-18,West,completed
+5,Eve Wilson,eve@test.com,555-456-7890,Widget B,10,49.99,499.90,2024-01-19,North,completed
+6,Frank Castle,frank@mail.com,555-567-8901,Widget A,-3,29.99,-89.97,2024-01-20,South,returned
+7,Grace Hopper,grace@tech.io,555-678-9012,Widget D,7,14.99,104.93,2024-01-21,East,completed
+8,Alice Johnson,alice@example.com,+1-555-123-4567,Widget A,5,29.99,149.95,2024-01-15,North,completed
+9,,henry@test.com,555-789-0123,Widget B,4,49.99,199.96,2024-01-22,West,pending
+10,Iris Chang,iris@example.com,555-890-1234,Widget C,2,99.99,199.98,2024-01-23,North,completed
+11,Jack Ryan,,555-901-2345,Widget A,1,29.99,29.99,2024-01-24,South,shipped
+12,Kate Moss,kate@fashion.com,555-012-3456,Widget D,100,14.99,1499.00,2024-01-25,East,completed
+13,Leo Messi,leo@sports.com,,Widget B,6,49.99,299.94,2024-01-26,West,completed
+14,Mia Wallace,mia@movie.com,555-123-4568,Widget C,3,99.99,299.97,2024-01-27,North,pending
+15,Nina Simone,,555-234-5679,Widget A,8,29.99,239.92,2024-01-28,South,completed
+16,Oscar Wilde,oscar@lit.com,555-345-6780,Widget D,2,14.99,29.98,2024-01-29,East,returned
+17,Pat Riley,pat@sports.com,555-456-7891,Widget B,,49.99,,2024-01-30,West,completed
+18,Quinn Hughes,quinn@hockey.com,555-567-8902,Widget A,4,29.99,119.96,2024-01-31,North,shipped
+19,Rosa Parks,rosa@history.com,555-678-9013,Widget C,1,99.99,99.99,2024-02-01,South,completed
+20,Sam Wilson,sam@avengers.com,,,5,29.99,149.95,2024-02-02,East,completed

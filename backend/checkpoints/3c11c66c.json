@@ -1,0 +1,43 @@
+{
+  "profiling": {
+    "status": "completed",
+    "started_at": null,
+    "completed_at": "2026-04-02T10:33:10.403928+00:00",
+    "output_hash": "",
+    "metadata": {
+      "rows": 20
+    }
+  },
+  "generating": {
+    "status": "completed",
+    "started_at": null,
+    "completed_at": "2026-04-02T10:33:31.267183+00:00",
+    "output_hash": "",
+    "metadata": {}
+  },
+  "simulating": {
+    "status": "completed",
+    "started_at": null,
+    "completed_at": "2026-04-02T10:33:31.296066+00:00",
+    "output_hash": "",
+    "metadata": {
+      "success": true
+    }
+  },
+  "healing": {
+    "status": "completed",
+    "started_at": null,
+    "completed_at": "2026-04-02T10:33:44.141100+00:00",
+    "output_hash": "",
+    "metadata": {
+      "iterations": 1
+    }
+  },
+  "packaging": {
+    "status": "completed",
+    "started_at": null,
+    "completed_at": "2026-04-02T10:33:44.148093+00:00",
+    "output_hash": "",
+    "metadata": {}
+  }
+}

@@ -1,0 +1,146 @@
+name: Pipeline Agent CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '20'
+
+jobs:
+  # ── Backend Tests ─────────────────────────────────────
+  backend-test:
+    runs-on: ubuntu-latest
+    name: Backend Tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio httpx
+
+      - name: Run unit tests
+        run: |
+          cd backend
+          python -m pytest tests/ -v --tb=short
+        env:
+          ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+
+      - name: Run data quality module tests
+        run: |
+          cd backend
+          python -c "
+          from engine.data_quality import run_data_quality_checks
+          profile = {
+              'row_count': 100,
+              'column_count': 3,
+              'duplicate_rows': 5,
+              'columns': [
+                  {'name': 'email', 'dtype': 'object', 'semantic_type': 'string',
+                   'null_count': 0, 'null_percent': 0, 'unique_count': 100,
+                   'sample_values': ['test@example.com']},
+                  {'name': 'amount', 'dtype': 'float64', 'semantic_type': 'float',
+                   'null_count': 30, 'null_percent': 30, 'unique_count': 50,
+                   'sample_values': ['100.0', '-5.0', '250.0'],
+                   'min': -5.0, 'max': 10000.0, 'mean': 200.0, 'std': 500.0},
+              ],
+          }
+          result = run_data_quality_checks(profile)
+          assert result['quality_score'] <= 100
+          assert result['pii_detected'] == True
+          print('✅ Data quality module: PASSED')
+          "
+
+      - name: Run retry engine tests
+        run: |
+          cd backend
+          python -c "
+          from engine.retry import RetryConfig, IdempotencyManager, CircuitBreaker
+          
+          # Test circuit breaker
+          cb = CircuitBreaker(failure_threshold=2, name='test')
+          assert cb.get_state()['state'] == 'closed'
+          
+          # Test idempotency
+          im = IdempotencyManager('test-session')
+          im.mark_started('phase1')
+          im.mark_completed('phase1')
+          assert im.is_completed('phase1') == True
+          
+          print('✅ Retry engine: PASSED')
+          "
+
+  # ── Frontend Tests ────────────────────────────────────
+  frontend-test:
+    runs-on: ubuntu-latest
+    name: Frontend Build Check
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Lint
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Build
+        run: |
+          cd frontend
+          npm run build
+
+  # ── Docker Build ──────────────────────────────────────
+  docker-build:
+    runs-on: ubuntu-latest
+    name: Docker Build
+    needs: [backend-test, frontend-test]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t pipeline-agent-backend:latest ./backend
+
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t pipeline-agent-frontend:latest ./frontend
+
+  # ── Security Scan ─────────────────────────────────────
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security Scan
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Python dependency audit
+        run: |
+          cd backend
+          pip install pip-audit
+          pip-audit -r requirements.txt || true
+
+      - name: Run npm audit
+        run: |
+          cd frontend
+          npm audit --production || true

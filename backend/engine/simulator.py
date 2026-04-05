@@ -69,6 +69,7 @@ def run_etl_simulation(etl_code: str, csv_path: str) -> dict:
                 "TypeError": TypeError,
                 "KeyError": KeyError,
                 "Exception": Exception,
+                "__import__": __import__,
             },
             "pd": pd,
             "pandas": pd,

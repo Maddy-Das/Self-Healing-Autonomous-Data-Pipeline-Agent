@@ -39,8 +39,9 @@ The ETL script MUST:
 1. Read CSV from variable `csv_path` (pre-defined in sandbox)
 2. Write results to SQLite database at variable `db_path` (pre-defined)
 3. Use ONLY: pandas (as pd), sqlite3, datetime — already imported in sandbox
-4. Print progress messages using print()
-5. Implement these PRODUCTION patterns:
+4. **CRITICAL**: Write COMPLETE, runnable import statements. NEVER write partial imports like 'import sq' - always write 'import sqlite3'
+5. Print progress messages using print()
+6. Implement these PRODUCTION patterns:
    - **Idempotent writes**: Use INSERT OR REPLACE / UPSERT to prevent duplicates on re-run
    - **Null handling**: Explicit strategy for each column (fill, drop, or flag)
    - **Type casting**: Safe conversion with error handling
@@ -72,7 +73,10 @@ The ETL script MUST:
 - Show source → ingestion → transformations → quality checks → destination
 - Include data volume annotations where relevant
 
-Return ONLY the JSON object — no markdown, no explanation outside the JSON."""
+CRITICAL RULES:
+1. Return ONLY the JSON object — no markdown formatting before or after.
+2. DO NOT USE MARKDOWN CODE BLOCKS (```python) INSIDE THE JSON VALUES. The code should just be a raw string with \\n for newlines.
+3. Code must be self-contained."""
 
 
 @retry_with_backoff(RetryConfig(max_retries=2, base_delay=2.0))
@@ -83,7 +87,7 @@ def _call_llm(messages: list) -> str:
             model=GLM_MODEL,
             messages=messages,
             temperature=0.3,
-            max_tokens=8000,
+            max_tokens=16000,  # Increased from 8000 to accommodate all artifacts
         )
         return response.choices[0].message.content.strip()
 
@@ -154,10 +158,14 @@ Generate a complete, production-ready data pipeline. Return ONLY a valid JSON ob
 
 def _parse_response(content: str) -> dict:
     """Robustly parse LLM response to extract JSON artifacts."""
+    raw_content = content or ""
+
     # Try to extract JSON from markdown code blocks first
-    json_match = re.search(r'```(?:json)?\s*\n?(.*?)\n?```', content, re.DOTALL)
+    json_match = re.search(r'```(?:json)?\s*\n?(.*)\n?```', content, re.DOTALL)
     if json_match:
         content = json_match.group(1).strip()
+    else:
+        content = raw_content.strip()
 
     # Try direct JSON parse
     try:
@@ -170,21 +178,26 @@ def _parse_response(content: str) -> dict:
             try:
                 result = json.loads(content[brace_start:brace_end + 1])
             except json.JSONDecodeError:
-                result = {
-                    "etl_code": "",
-                    "sql_schema": "",
-                    "airflow_dag": "",
-                    "mermaid_diagram": "",
-                    "reasoning": f"Failed to parse LLM response. Raw output:\n{content[:2000]}",
-                }
+                result = _salvage_builder_fields(raw_content)
         else:
-            result = {
-                "etl_code": "",
-                "sql_schema": "",
-                "airflow_dag": "",
-                "mermaid_diagram": "",
-                "reasoning": f"No JSON found in LLM response. Raw output:\n{content[:2000]}",
-            }
+            result = _salvage_builder_fields(raw_content)
+
+    if not isinstance(result, dict):
+        result = _salvage_builder_fields(raw_content)
+
+    # Last-resort salvage if parser produced mostly empty values.
+    if not any(result.get(k) for k in ("etl_code", "sql_schema", "airflow_dag", "mermaid_diagram")):
+        result = _salvage_builder_fields(raw_content, existing=result)
+
+    # Generate fallback DAG if missing or invalid (ensures pipeline is executable)
+    dag_code = result.get("airflow_dag", "").strip()
+    if not dag_code or not _is_valid_airflow_dag(dag_code):
+        old_dag_len = len(dag_code)
+        result["airflow_dag"] = _generate_fallback_airflow_dag()
+        logger.warning(
+            f"Generated fallback Airflow DAG (original was {old_dag_len} chars, pass validation={_is_valid_airflow_dag(dag_code)})", 
+            extra={"component": "builder"}
+        )
 
     # Normalize keys
     return {
@@ -194,3 +207,148 @@ def _parse_response(content: str) -> dict:
         "mermaid_diagram": result.get("mermaid_diagram", ""),
         "reasoning_trace": result.get("reasoning", result.get("reasoning_trace", "")),
     }
+
+
+def _salvage_builder_fields(raw_content: str, existing: dict = None) -> dict:
+    """Recover fields from malformed LLM output using regex and fenced code fallback."""
+    existing = existing or {}
+
+    def extract_json_string_field(key: str) -> str:
+        # Capture until next known key, allowing broken/partial JSON payloads.
+        pattern = re.compile(
+            rf'"{key}"\s*:\s*"(.*?)"\s*,\s*"(?:etl_code|sql_schema|airflow_dag|mermaid_diagram|reasoning|reasoning_trace)"',
+            re.DOTALL,
+        )
+        match = pattern.search(raw_content)
+        if not match:
+            # Key may be the last field before a closing brace (or truncated tail).
+            tail_pattern = re.compile(rf'"{key}"\s*:\s*"(.*?)(?:"\s*\}}|$)', re.DOTALL)
+            match = tail_pattern.search(raw_content)
+        if not match:
+            return ""
+        value = match.group(1)
+        # Unescape common JSON escapes where possible.
+        try:
+            return json.loads(f'"{value}"')
+        except Exception:
+            return value.replace("\\n", "\n").replace("\\t", "\t").replace('\\"', '"').strip()
+
+    etl_code = existing.get("etl_code", "") or extract_json_string_field("etl_code")
+    sql_schema = existing.get("sql_schema", "") or extract_json_string_field("sql_schema")
+    airflow_dag = existing.get("airflow_dag", "") or extract_json_string_field("airflow_dag")
+    mermaid_diagram = existing.get("mermaid_diagram", "") or extract_json_string_field("mermaid_diagram")
+    reasoning = existing.get("reasoning", existing.get("reasoning_trace", "")) or extract_json_string_field("reasoning")
+
+    # Fallback: use fenced code blocks if key extraction failed.
+    if not etl_code:
+        py_blocks = re.findall(r"```python\s*(.*?)```", raw_content, re.DOTALL | re.IGNORECASE)
+        if py_blocks:
+            etl_code = py_blocks[0].strip()
+    if not airflow_dag:
+        py_blocks = re.findall(r"```python\s*(.*?)```", raw_content, re.DOTALL | re.IGNORECASE)
+        if len(py_blocks) > 1:
+            airflow_dag = py_blocks[1].strip()
+    if not sql_schema:
+        sql_blocks = re.findall(r"```sql\s*(.*?)```", raw_content, re.DOTALL | re.IGNORECASE)
+        if sql_blocks:
+            sql_schema = sql_blocks[0].strip()
+    if not mermaid_diagram:
+        mermaid_blocks = re.findall(r"```mermaid\s*(.*?)```", raw_content, re.DOTALL | re.IGNORECASE)
+        if mermaid_blocks:
+            mermaid_diagram = mermaid_blocks[0].strip()
+
+    if not reasoning:
+        reasoning = f"Failed to parse LLM response cleanly. Raw output:\n{raw_content[:2000]}"
+
+    return {
+        "etl_code": etl_code,
+        "sql_schema": sql_schema,
+        "airflow_dag": airflow_dag,
+        "mermaid_diagram": mermaid_diagram,
+        "reasoning": reasoning,
+    }
+
+
+def _generate_fallback_airflow_dag() -> str:
+    """
+    Generate a baseline Airflow DAG when LLM parsing fails.
+    Ensures pipeline is always executable even with incomplete LLM response.
+    """
+    return '''from airflow import DAG
+from airflow.operators.python import PythonOperator
+from airflow.utils.dates import days_ago
+from datetime import datetime, timedelta
+
+# Fallback DAG (generated due to LLM response truncation)
+default_args = {
+    "owner": "data_team",
+    "depends_on_past": False,
+    "start_date": days_ago(1),
+    "email_on_failure": False,
+    "email_on_retry": False,
+    "retries": 3,
+    "retry_delay": timedelta(minutes=5),
+}
+
+dag = DAG(
+    "data_pipeline_etl",
+    default_args=default_args,
+    description="Enterprise data pipeline with idempotency and healing",
+    schedule_interval="0 8 * * *",  # Daily at 8 AM
+    catchup=False,
+    tags=["etl", "production"],
+)
+
+
+def extract_task():
+    """Extract data from source (CSV)"""
+    print("[EXTRACT] Reading source CSV...")
+    
+
+def transform_task():
+    """Transform and validate data"""
+    print("[TRANSFORM] Processing data...")
+
+
+def load_task():
+    """Load data to destination (SQLite)"""
+    print("[LOAD] Writing to database...")
+
+
+extract = PythonOperator(
+    task_id="extract",
+    python_callable=extract_task,
+    dag=dag,
+)
+
+transform = PythonOperator(
+    task_id="transform",
+    python_callable=transform_task,
+    dag=dag,
+)
+
+load = PythonOperator(
+    task_id="load",
+    python_callable=load_task,
+    dag=dag,
+)
+
+extract >> transform >> load
+'''
+
+
+def _is_valid_airflow_dag(dag_code: str) -> bool:
+    """Check if DAG code contains minimum required elements."""
+    if not dag_code or len(dag_code.strip()) < 50:
+        return False
+    
+    # Check for essential Airflow DAG elements
+    has_dag_import = "from airflow import DAG" in dag_code or "import airflow" in dag_code
+    has_dag_definition = "dag = DAG(" in dag_code or "DAG(" in dag_code
+    has_operators = "PythonOperator" in dag_code or "BashOperator" in dag_code or "Operator" in dag_code
+    has_task_dependencies = ">>" in dag_code or "set_upstream" in dag_code or "set_downstream" in dag_code
+    
+    # At least 3 of 4 critical elements should be present
+    critical_count = sum([has_dag_import, has_dag_definition, has_operators, has_task_dependencies])
+    return critical_count >= 3
+

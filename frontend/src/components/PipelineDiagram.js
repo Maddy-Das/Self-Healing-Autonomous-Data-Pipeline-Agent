@@ -1,60 +1,55 @@
 "use client";
 import { useEffect, useRef } from "react";
+import mermaid from "mermaid";
 
 export default function PipelineDiagram({ mermaidCode }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!mermaidCode || !containerRef.current) return;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "neutral",
+      securityLevel: "loose",
+      themeVariables: {
+        primaryColor: "#4f46e5",
+        primaryTextColor: "#0f172a",
+        lineColor: "#334155",
+        secondaryColor: "#f1f5f9",
+        tertiaryColor: "#ffffff",
+        fontFamily: "Inter, -apple-system, sans-serif"
+      },
+    });
+  }, []);
 
-    let cancelled = false;
-
-    const renderDiagram = async () => {
-      try {
-        const mermaid = (await import("mermaid")).default;
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: "dark",
-          themeVariables: {
-            primaryColor: "#6366f1",
-            primaryTextColor: "#f1f5f9",
-            primaryBorderColor: "#6366f1",
-            lineColor: "#8b5cf6",
-            secondaryColor: "#1e293b",
-            tertiaryColor: "#0f172a",
-            fontFamily: "Inter, sans-serif",
-          },
-        });
-
-        if (cancelled) return;
-        const id = "mermaid-" + Date.now();
-        const { svg } = await mermaid.render(id, mermaidCode);
-        if (!cancelled && containerRef.current) {
-          containerRef.current.innerHTML = svg;
+  useEffect(() => {
+    if (mermaidCode && containerRef.current) {
+      mermaid.contentLoaded();
+      const renderDiagram = async () => {
+        try {
+          const { svg } = await mermaid.render(`diagram-${Date.now()}`, mermaidCode);
+          if (containerRef.current) {
+             containerRef.current.innerHTML = svg;
+          }
+        } catch (err) {
+          console.error("Mermaid error:", err);
+          if (containerRef.current) {
+            containerRef.current.innerText = "Architecture Blueprint Synthesis Pending Artifacts...";
+          }
         }
-      } catch {
-        if (!cancelled && containerRef.current) {
-          containerRef.current.innerHTML = `<pre style="color: var(--text-muted); font-size: 13px;">${mermaidCode}</pre>`;
-        }
-      }
-    };
-
-    renderDiagram();
-    return () => { cancelled = true; };
+      };
+      renderDiagram();
+    }
   }, [mermaidCode]);
 
   if (!mermaidCode) {
     return (
       <div className="glass-card section-panel">
-        <div className="section-header">
-          <div className="section-title">
-            <span className="section-icon">🔀</span> Pipeline Diagram
-          </div>
+        <div className="section-header" style={{ padding: '0px', height: '48px', borderBottom: '1px solid var(--border-subtle)', background: 'transparent' }}>
+          <div className="section-title">Architecture Blueprint</div>
         </div>
         <div className="empty-state">
-          <div className="empty-state-icon">📊</div>
-          <div className="empty-state-text">
-            Pipeline diagram will appear here after generation
+          <div className="empty-state-text" style={{ fontSize: '13px', opacity: 0.5 }}>
+            Synthesized system architecture will be available post-synthesis.
           </div>
         </div>
       </div>
@@ -63,13 +58,17 @@ export default function PipelineDiagram({ mermaidCode }) {
 
   return (
     <div className="glass-card section-panel">
-      <div className="section-header">
-        <div className="section-title">
-          <span className="section-icon">🔀</span> Pipeline Diagram
-        </div>
-        <span className="section-badge badge-success">Generated</span>
+      <div className="section-header" style={{ padding: '0px', height: '48px', borderBottom: '1.5px solid var(--border-subtle)', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="section-title">Architecture Blueprint</div>
+        <div className="section-badge badge-info" style={{ fontSize: '10px' }}>SYSTEM MANIFEST</div>
       </div>
-      <div className="mermaid-container" ref={containerRef} />
+      <div
+        ref={containerRef}
+        className="mermaid-container"
+        style={{ width: "100%", textAlign: "center", marginTop: "32px", overflowX: "auto", background: 'transparent', padding: '24px 0' }}
+      >
+        {/* Mermaid SVG renders here */}
+      </div>
     </div>
   );
 }

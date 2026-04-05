@@ -24,4 +24,6 @@ MAX_UPLOAD_SIZE_MB = 50
 CORS_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3001",
 ]

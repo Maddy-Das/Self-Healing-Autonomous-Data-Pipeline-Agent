@@ -10,7 +10,7 @@ import HealingHistory from "@/components/HealingHistory";
 import ReadinessScore from "@/components/ReadinessScore";
 import DataQualityReport from "@/components/DataQualityReport";
 
-const API = "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const STEPS = [
   { key: "profiling", label: "Profile" },

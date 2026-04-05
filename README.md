@@ -100,6 +100,47 @@ You can containerize the application using the multi-stage Dockerfiles provided 
 
 ---
 
+## 🌐 Production + Vercel Deployment
+
+This project is deployed as:
+- **Frontend (Next.js)** on **Vercel**
+- **Backend (FastAPI)** on a Python host (Render/Railway/Fly.io/VM)
+
+### 1) Deploy Backend (FastAPI)
+
+Set environment variables on your backend host:
+- `ZHIPUAI_API_KEY=your_actual_api_key`
+- `CORS_ORIGINS=https://your-frontend-domain.vercel.app`
+
+Start command:
+```bash
+uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+(Run from the `backend` directory.)
+
+### 2) Deploy Frontend to Vercel
+
+In Vercel:
+- **Root Directory**: `frontend`
+- **Build Command**: `npm run build`
+- **Install Command**: `npm ci`
+- **Output**: default Next.js output
+
+Set frontend environment variable:
+- `NEXT_PUBLIC_API_URL=https://your-backend-domain`
+
+Then deploy.
+
+### 3) Validate Production
+
+After deploy:
+- Open Vercel URL
+- Upload sample CSV from `sample_data/`
+- Generate pipeline and verify status reaches `complete`
+- Verify artifact download works
+
+---
+
 ## 🧪 Running the Test Suite
 
 The backend comes with a comprehensive suite of **28 passing unit tests** validating the AI modules, quality validation, resilience layers, and circuit breakers.

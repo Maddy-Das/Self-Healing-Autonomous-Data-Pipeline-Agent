@@ -2,7 +2,7 @@
 
 ![Built with GLM 5.1](https://img.shields.io/badge/Built%20with-GLM%205.1-0052FF?style=for-the-badge) ![Python](https://img.shields.io/badge/Language-Python%20%7C%20JS-blue?style=for-the-badge)
 
-![Project Thumbnail](./assets/thumbnail.png)
+![Project Thumbnail](./doc/Thumbnail.png)
 
 **An AI-powered system designed to solve the biggest bottlenecks in DataOps: slow pipeline prototyping and rigid, breakable ETL code.**
 
@@ -12,9 +12,12 @@
 <summary><b>🎥 demo.mp4</b></summary>
 <br>
 
-[![Watch the Demo](./assets/thumbnail.png)](https://youtu.be/VdM6YKiD6eQ)
+<video controls playsinline preload="metadata" poster="./doc/Thumbnail.png" width="100%">
+  <source src="./doc/demo.mp4" type="video/mp4" />
+  Your viewer does not support embedded video playback.
+</video>
 
-*(Click the image above or [here](https://youtu.be/VdM6YKiD6eQ) to watch the full demo on YouTube)*
+*(If your viewer does not support inline video playback, open [`doc/demo.mp4`](./doc/demo.mp4).)*
 </details>
 
 ---
@@ -38,7 +41,7 @@ This system acts as an **Autonomous Self-Healing Agent**:
 
 ## 🏗️ Architecture
 
-![Architecture Diagram](./assets/architecture-diagram.png)
+![Architecture Diagram](./doc/Architecture_Diagram.png)
 
 ### Workflow Summary
 1. **Input Module:** User uploads CSV + natural language prompt.

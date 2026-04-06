@@ -12,6 +12,10 @@
 
 [![Watch Demo](./doc/Thumbnail.png)](https://github.com/Maddy-Das/Self-Healing-Autonomous-Data-Pipeline-Agent/blob/main/doc/demo.mp4)
 
+
+https://github.com/user-attachments/assets/f6c2f2aa-6c5f-4157-aa0d-a8b9693dee5f
+
+
 ---
 
 ## ⚠️ The Problem

@@ -108,9 +108,11 @@ This project is deployed as:
 
 ### 1) Deploy Backend (FastAPI)
 
-Set environment variables on your backend host:
+Set environment variables on your backend host (Render):
 - `ZHIPUAI_API_KEY=your_actual_api_key`
 - `CORS_ORIGINS=https://your-frontend-domain.vercel.app`
+  - If you use multiple frontend domains, separate them with commas.
+  - The origin must exactly match your frontend URL (including `https` and domain).
 
 Start command:
 ```bash
@@ -126,8 +128,12 @@ In Vercel:
 - **Install Command**: `npm ci`
 - **Output**: default Next.js output
 
-Set frontend environment variable:
-- `NEXT_PUBLIC_API_URL=https://your-backend-domain`
+Set frontend environment variable in Vercel:
+- `NEXT_PUBLIC_API_URL=https://self-healing-autonomousdata-pipeline.onrender.com`
+
+Use this exact value for this repository's hosted backend. If you deploy your own backend, replace it with your backend URL (for example: `https://your-backend-name.onrender.com`).
+
+Save it for Production (and Preview/Development if needed), then redeploy the frontend.
 
 Then deploy.
 
@@ -138,6 +144,7 @@ After deploy:
 - Upload sample CSV from `sample_data/`
 - Generate pipeline and verify status reaches `complete`
 - Verify artifact download works
+- If you still get a CORS error, check that `CORS_ORIGINS` exactly matches the Vercel frontend origin.
 
 ---
 

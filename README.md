@@ -1,6 +1,6 @@
 # 🔄 Self-Healing Autonomous Data Pipeline Agent
 
-![Built with GLM 5.1](https://img.shields.io/badge/Built%20with-GLM%205.1-0052FF?style=for-the-badge) ![Python](https://img.shields.io/badge/Language-Python%20%7C%20JS-blue?style=for-the-badge) ![License](https://img.shields.io/badge/License-Apache%202.0-success?style=for-the-badge)
+![Built with GLM 5.1](https://img.shields.io/badge/Built%20with-GLM%205.1-0052FF?style=for-the-badge) ![Python](https://img.shields.io/badge/Language-Python%20%7C%20JS-blue?style=for-the-badge)
 
 ![Project Thumbnail](./assets/thumbnail.png)
 

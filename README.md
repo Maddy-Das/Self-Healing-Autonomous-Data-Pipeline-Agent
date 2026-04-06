@@ -9,16 +9,9 @@
 ---
 
 <details open>
-<summary><b>🎥 demo.mp4</b></summary>
-<br>
+<summary><b>🎥 Demo Video</b></summary>
 
-<video controls playsinline preload="metadata" poster="./doc/Thumbnail.png" width="100%">
-  <source src="./doc/demo.mp4" type="video/mp4" />
-  Your viewer does not support embedded video playback.
-</video>
-
-*(If your viewer does not support inline video playback, open [`doc/demo.mp4`](./doc/demo.mp4).)*
-</details>
+https://github.com/user-attachments/assets/514815ed-c201-4741-a786-809563636ffb
 
 ---
 

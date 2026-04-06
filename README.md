@@ -12,7 +12,10 @@
 <summary><b>🎥 demo.mp4</b></summary>
 <br>
 
-<video src="./doc/demo.mp4" controls muted playsinline width="100%"></video>
+<video controls playsinline preload="metadata" poster="./doc/Thumbnail.png" width="100%">
+  <source src="./doc/demo.mp4" type="video/mp4" />
+  Your viewer does not support embedded video playback.
+</video>
 
 *(If your viewer does not support inline video playback, open [`doc/demo.mp4`](./doc/demo.mp4).)*
 </details>

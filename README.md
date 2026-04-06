@@ -131,6 +131,8 @@ In Vercel:
 Set frontend environment variable in Vercel:
 - `NEXT_PUBLIC_API_URL=https://self-healing-autonomousdata-pipeline.onrender.com`
 
+Use this exact value for this repository's hosted backend. If you deploy your own backend, replace it with your backend URL (for example: `https://your-backend-name.onrender.com`).
+
 Save it for Production (and Preview/Development if needed), then redeploy the frontend.
 
 Then deploy.

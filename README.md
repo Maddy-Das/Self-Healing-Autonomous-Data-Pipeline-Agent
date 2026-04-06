@@ -12,9 +12,9 @@
 <summary><b>🎥 demo.mp4</b></summary>
 <br>
 
-[![Watch the Demo](./doc/Thumbnail.png)](https://youtu.be/VdM6YKiD6eQ)
+<video src="./doc/demo.mp4" controls muted playsinline width="100%"></video>
 
-*(Click the image above or [here](https://youtu.be/VdM6YKiD6eQ) to watch the full demo on YouTube)*
+*(If your viewer does not support inline video playback, open [`doc/demo.mp4`](./doc/demo.mp4).)*
 </details>
 
 ---

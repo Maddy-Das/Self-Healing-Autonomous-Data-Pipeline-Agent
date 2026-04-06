@@ -10,10 +10,7 @@
 
 ## 🎥 Demo Video
 
-<video controls playsinline preload="metadata" poster="./doc/Thumbnail.png" width="100%">
-  <source src="https://raw.githubusercontent.com/Maddy-Das/Self-Healing-Autonomous-Data-Pipeline-Agent/main/doc/demo.mp4" type="video/mp4" />
-  Your viewer does not support embedded video playback.
-</video>
+[![Watch Demo](./doc/Thumbnail.png)](https://github.com/Maddy-Das/Self-Healing-Autonomous-Data-Pipeline-Agent/blob/main/doc/demo.mp4)
 
 ---
 

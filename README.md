@@ -62,43 +62,154 @@ git clone https://github.com/Maddy-Das/Self-Healing-Autonomous-Data-Pipeline-Age
 cd Self-Healing-Autonomous-Data-Pipeline-Agent
 ```
 
-Create and activate a virtual environment:
+# 🛠️ Running the Project Locally
+
+## 1️⃣ Prerequisites
+
+Ensure the following are installed on your system:
+
+* **Python 3.10+** (Backend)
+* **Node.js 18+** (Frontend)
+* **Zhipu AI API Key** *(required for AI healing engine)*
+
+---
+
+## 2️⃣ Backend Setup (FastAPI)
+
+### 📁 Navigate to Backend
 
 ```bash
-python -m venv .venv
-
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
+cd backend
 ```
 
-Install dependencies:
+### ⚙️ Create & Activate Virtual Environment
+
+```bash
+# Windows
+python -m venv venv
+.\venv\Scripts\activate
+
+# Mac/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 📦 Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
+### 🔐 Configure Environment Variables
 
-## ▶️ How to Run
+Create a `.env` file inside the `backend/` directory:
 
-Start the backend application:
-
-```bash
-python app.py
+```env
+ZHIPUAI_API_KEY=your_actual_api_key_here
 ```
 
-*(If you have a separate frontend server)*:
+### 🚀 Run Backend Server
+
+```bash
+python main.py
+```
+
+✅ Backend will be available at:
+👉 [http://localhost:8000](http://localhost:8000)
+
+---
+
+## 3️⃣ Frontend Setup (Next.js)
+
+### 📁 Navigate to Frontend
+
+(Open a new terminal)
+
 ```bash
 cd frontend
-npm install
-npm run dev
 ```
 
-1. Open your local browser (e.g., `http://localhost:3000`).
-2. Upload a sample CSV.
-3. Enter your natural-language ETL prompt.
-4. Watch the live dashboard as the agent generates, tests, and self-heals your pipeline!
+### 📦 Install Dependencies
+
+```bash
+npm install
+```
+
+### 🚀 Start Development Server
+
+```bash
+npm run dev or npx dev next
+```
+
+🌐 Frontend will be available at:
+👉 [http://localhost:3000](http://localhost:3000)
 
 ---
+
+## 4️⃣ Verification & First Run
+
+1. Open your browser and go to:
+
+   ```
+   http://localhost:3000
+   ```
+
+2. ✅ Check system status:
+
+   * Header should show: **"System: Operational"** (green indicator)
+
+3. 📂 Upload Sample Data:
+
+   * Drag a CSV file from `sample_data/` into the upload area
+
+4. 💬 Enter a Prompt:
+
+   ```
+   Clean this data, remove nulls, and create an ETL script that outputs to CSV.
+   ```
+
+5. ⚡ Observe:
+
+   * The **Self-Healing Pipeline Agent** generates, tests, and fixes your ETL pipeline automatically
+
+---
+
+## 🧪 Running Tests
+
+To validate the AI engine and resilience layers:
+
+```bash
+cd backend
+python -m pytest tests/ -v
+```
+
+---
+
+## 🐳 Running with Docker (Fast Track)
+
+### Backend
+
+```bash
+docker build -t pipeline-backend ./backend
+docker run -p 8000:8000 -e ZHIPUAI_API_KEY="your_key" pipeline-backend
+```
+
+### Frontend
+
+```bash
+docker build -t pipeline-frontend ./frontend
+docker run -p 3000:3000 pipeline-frontend
+```
+
+---
+
+## 🚀 Usage Flow
+
+1. Open 👉 [http://localhost:3000](http://localhost:3000)
+2. Upload a sample CSV file
+3. Enter a natural language ETL prompt
+4. Watch the system:
+
+   * Generate pipeline
+   * Execute validation
+   * Auto-fix errors (self-healing)

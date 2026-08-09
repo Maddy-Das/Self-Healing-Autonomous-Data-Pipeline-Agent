@@ -1,4 +1,4 @@
-# 🔄 Self-Healing Autonomous Data Pipeline Agent
+#  Self-Healing Autonomous Data Pipeline Agent
 
 ![Built with GLM 5.1](https://img.shields.io/badge/Built%20with-GLM%205.1-0052FF?style=for-the-badge) ![Python](https://img.shields.io/badge/Language-Python%20%7C%20JS-blue?style=for-the-badge)
 
@@ -9,20 +9,20 @@
 ---
 
 <details open>
-<summary><b>🎥 Demo Video</b></summary>
+<summary><b> Demo Video</b></summary>
 
 https://github.com/user-attachments/assets/514815ed-c201-4741-a786-809563636ffb
 
 ---
 
-## ⚠️ The Problem
+##  The Problem
 
 1. **Slow Prototyping:** Traditional ETL development is time-consuming. Data engineers must manually parse schemas, write complex transformation logic, wire orchestration DAGs, and validate SQL queries.
 2. **Brittle LLM Pipelines:** Standard AI code generation without validation is unreliable. Most LLM-generated data pipelines fail in real environments due to syntax errors, runtime bugs, or unexpected data quality issues (e.g., null spikes, type mismatches).
 
 ---
 
-## 🚀 The Solution
+##  The Solution
 
 This system acts as an **Autonomous Self-Healing Agent**:
 
@@ -32,7 +32,7 @@ This system acts as an **Autonomous Self-Healing Agent**:
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ![Architecture Diagram](./doc/Architecture_Diagram.png)
 
@@ -46,7 +46,7 @@ This system acts as an **Autonomous Self-Healing Agent**:
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **AI Engine:** GLM 5.1 API (Reasoning, planning, generation, and self-healing correction)
 - **Backend:** Python (Core agent logic, ETL generation, sandbox validation)
@@ -55,16 +55,16 @@ This system acts as an **Autonomous Self-Healing Agent**:
 
 ---
 
-## 📦 Installation
+##  Installation
 
 ```bash
 git clone https://github.com/Maddy-Das/Self-Healing-Autonomous-Data-Pipeline-Agent.git
 cd Self-Healing-Autonomous-Data-Pipeline-Agent
 ```
 
-# 🛠️ Running the Project Locally
+#  Running the Project Locally
 
-## 1️⃣ Prerequisites
+## 1️ Prerequisites
 
 Ensure the following are installed on your system:
 
@@ -74,15 +74,15 @@ Ensure the following are installed on your system:
 
 ---
 
-## 2️⃣ Backend Setup (FastAPI)
+## 2️ Backend Setup (FastAPI)
 
-### 📁 Navigate to Backend
+###  Navigate to Backend
 
 ```bash
 cd backend
 ```
 
-### ⚙️ Create & Activate Virtual Environment
+###  Create & Activate Virtual Environment
 
 ```bash
 # Windows
@@ -94,13 +94,13 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 📦 Install Dependencies
+###  Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 🔐 Configure Environment Variables
+###  Configure Environment Variables
 
 Create a `.env` file inside the `backend/` directory:
 
@@ -108,20 +108,20 @@ Create a `.env` file inside the `backend/` directory:
 ZHIPUAI_API_KEY=your_actual_api_key_here
 ```
 
-### 🚀 Run Backend Server
+###  Run Backend Server
 
 ```bash
 python main.py
 ```
 
-✅ Backend will be available at:
-👉 [http://localhost:8000](http://localhost:8000)
+ Backend will be available at:
+ [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## 3️⃣ Frontend Setup (Next.js)
+## 3️ Frontend Setup (Next.js)
 
-### 📁 Navigate to Frontend
+###  Navigate to Frontend
 
 (Open a new terminal)
 
@@ -129,24 +129,24 @@ python main.py
 cd frontend
 ```
 
-### 📦 Install Dependencies
+###  Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 🚀 Start Development Server
+###  Start Development Server
 
 ```bash
 npm run dev or npx dev next
 ```
 
-🌐 Frontend will be available at:
-👉 [http://localhost:3000](http://localhost:3000)
+ Frontend will be available at:
+ [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 4️⃣ Verification & First Run
+## 4️ Verification & First Run
 
 1. Open your browser and go to:
 
@@ -154,15 +154,15 @@ npm run dev or npx dev next
    http://localhost:3000
    ```
 
-2. ✅ Check system status:
+2.  Check system status:
 
    * Header should show: **"System: Operational"** (green indicator)
 
-3. 📂 Upload Sample Data:
+3.  Upload Sample Data:
 
    * Drag a CSV file from `sample_data/` into the upload area
 
-4. 💬 Enter a Prompt:
+4.  Enter a Prompt:
 
    ```
    Clean this data, remove nulls, and create an ETL script that outputs to CSV.
@@ -174,7 +174,7 @@ npm run dev or npx dev next
 
 ---
 
-## 🧪 Running Tests
+##  Running Tests
 
 To validate the AI engine and resilience layers:
 
@@ -185,7 +185,7 @@ python -m pytest tests/ -v
 
 ---
 
-## 🐳 Running with Docker (Fast Track)
+##  Running with Docker (Fast Track)
 
 ### Backend
 
@@ -203,7 +203,7 @@ docker run -p 3000:3000 pipeline-frontend
 
 ---
 
-## 🚀 Usage Flow
+##  Usage Flow
 
 1. Open 👉 [http://localhost:3000](http://localhost:3000)
 2. Upload a sample CSV file
@@ -213,3 +213,11 @@ docker run -p 3000:3000 pipeline-frontend
    * Generate pipeline
    * Execute validation
    * Auto-fix errors (self-healing)
+
+## Author
+
+Maddy-Das
+
+GitHub: https://github.com/Maddy-Das
+
+LinkedIn: https://www.linkedin.com/in/maddydas07
